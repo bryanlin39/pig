@@ -1,71 +1,132 @@
 $(document).ready(function(){
-
+  //coin flip to determine first player
+  var activePlayer = "";
+  function coinFlip(){
+    var flip = Math.ceil(Math.random() * 2);
+    if (flip===1){
+      activePlayer='player1';
+      alert(activePlayer+' is first');
+    }
+    else if(flip===2&&cpuPlayer===true){
+      activePlayer='player2'
+      alert(activePlayer+' is first');
+      hit();
+    }
+    else{
+      activePlayer='player2'
+      alert(activePlayer+' is first');
+    }
+  }
+  //determines if player 2 is a human or cpu
+  var cpuPlayer = false;
+  $('#solo').click(function(){
+    cpuPlayer = true;
+    $('#howManyPlayers').hide();
+    $('#results').show();
+    coinFlip();
+  });
+  $('#double').click(function(){
+    $('#howManyPlayers').hide();
+    $('#results').show();
+    coinFlip();
+  });
+  //resets the game on win or reset button
+  function reset(){
+    turnTotal = 0;
+    activeTotal = 0;
+    inactiveTotal = 0;
+    activePlayer = "";
+    $('#howManyPlayers').show();
+    $('#results').hide();
+    $('#player1-history').empty();
+    $('#player2-history').empty();
+    $('#player1-total').empty();
+    $('#player2-total').empty();
+  }
+  //simulates d6 roll
   function diceRoll() {
     return Math.ceil(Math.random() * 6);
   }
 
-  var turnTotal = 0;
-  var playerTotal1 = 0;
-  var playerTotal2 = 0;
+  //script for players taking turns
+  function swap(){
+    //switch player totals
+    var third = activeTotal;
+    activeTotal = inactiveTotal;
+    inactiveTotal = third;
+    //switch active player
+    console.log(activePlayer, cpuPlayer);
+    if(activePlayer==='player1'&&cpuPlayer===true){
+      activePlayer = 'player2';
+      hit();
+    }
+    else if(activePlayer==='player1'){
+      activePlayer = 'player2';
+    }
+    else{
+      activePlayer = 'player1';
+    }
+  }
 
-  function computerTurn(){
+  //totals
+  var turnTotal = 0;
+  var activeTotal = 0;
+  var inactiveTotal = 0;
+
+  function hit(){
+    // debugger
     var roll = diceRoll();
     var riskFactor = 20;
 
-    if(playerTotal1-playerTotal2>20){
-      riskFactor = 25;
-    }
-    else if(playerTotal2-playerTotal1>20){
+    if(inactiveTotal-activeTotal>20){
+      riskFactor = 25;}
+    else if(activeTotal-inactiveTotal>20){
       riskFactor = 10;
     }
 
     //expected value is good, hit
-    console.log(riskFactor);
-    if(roll!=1 && ((turnTotal/6)<(riskFactor/6))){
+    if(roll!=1){
       turnTotal += roll;
-      $('#computer-history').append('<li>'+roll+'</li>');
-      computerTurn();
+      $('#'+activePlayer+'-history').append('<li>'+roll+'</li>');
+      if(activePlayer==='player2'&&cpuPlayer===true&&(turnTotal+activeTotal)>=100){
+        hold();
+      }
+      else if(activePlayer==='player2'&&cpuPlayer===true&&turnTotal<riskFactor){
+        hit();
+      }
+      else if(activePlayer==='player2'&&cpuPlayer===true){
+        hold();
+      }
     }
-    //risk is high, hold
-    else if(roll!=1){
-      playerTotal2 += turnTotal
-      turnTotal = 0;
-      $('#computer-history').append('<li>hold</li>');
-      $('#computer-total').text(playerTotal2);
-    }
-    //rolled a 1, bust
+    //bust
     else{
       turnTotal = 0;
-      $('#computer-history').append('<li>bust</li>');
-      $('#computer-total').text(playerTotal2);
+      $('#'+activePlayer+'-history').append('<li>bust</li>');
+      $('#'+activePlayer+'-total').text(activeTotal);
+      swap();
     }
+  }
+  function hold(){
+    activeTotal += turnTotal
+    if(activeTotal>=100){
+      alert('Congratulations '+activePlayer+', you win!!!!!');
+    }
+    turnTotal = 0;
+    $('#'+activePlayer+'-history').append('<li>hold</li>');
+    $('#'+activePlayer+'-total').text(activeTotal);
+    swap();
   }
 
   $('#hit').click(function() {
-    var roll = diceRoll();
-    //expected value is good, hit
-    if(roll!=1){
-      turnTotal += roll;
-      $('#player-history').append('<li>'+roll+'</li>');
-      // rolled a 1, bust
-    } else {
-      turnTotal = 0;
-      $('#player-history').append('<li>bust</li>');
-      $('#player-total').text(playerTotal1);
-      computerTurn();
-    }
+    hit();
   });
-
   $('#hold').click(function(){
-    playerTotal1 += turnTotal
-    turnTotal = 0;
-    $('#player-history').append('<li>hold</li>');
-    $('#player-total').text(playerTotal1);
-    computerTurn();
+    hold();
+  });
+  $('#reset').click(function() {
+    reset();
   });
 
-
-  //ahead or behind
   //90 and up
   //coin flip for first player
 
