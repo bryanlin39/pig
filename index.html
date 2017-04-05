@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
+    <script src="js/jquery-3.2.0.js"></script>
+    <script src="js/scripts.js"></script>
+    <title>Pig-Dice</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Play Pig (Dice Game)!</h1>
+
+      <div id="intro">
+        <h3>Rules:</h3>
+        <p>Each turn, a player repeatedly rolls a die until either a 1 is rolled or the player decides to "hold":</p>
+        <ul>
+          <li>If the player rolls a 1, they score nothing and it becomes the next player's turn.</li>
+          <li>If the player rolls any other number, it is added to their turn total and the player's turn continues.</li>
+          <li>If a player chooses to "hold", their turn total is added to their score, and it becomes the next player's turn.</li>
+        </ul>
+        <p>The first player to score 100 or more points wins.</p>
+
+        <button type="button" class="btn btn-primary btn-lg" name="solo" id="solo">Single Player Mode</button>
+        <button type="button" class="btn btn-success btn-lg" name="double" id="double">Play With a Friend</button>
+      </div>
+      <div id="results">
+        <button type="button" class="btn btn-danger btn-lg" name="hit" id="hit">Hit!</button>
+        <button type="button" class="btn btn-secondary btn-lg" name="hold" id="hold">Hold</button>
+        <div class="row">
+          <div class="col-md-3 solo">
+            <h3>Your Point Total: <span id="player-total"></span><h3>
+            <ul id="player-history">
+            </ul>
+          </div>
+          <div class="col-md-3 solo">
+            <h3>Computer's Point Total: <span id="computer-total"></span><h3>
+            <ul id="computer-history">
+            </ul>
+          </div>
+          <div class="col-md-3 double">
+            <h3>Player 1 Point Total: <span id="player1-total"></span><h3>
+            <ul id="player1-history">
+            </ul>
+          </div>
+          <div class="col-md-3 double">
+            <h3>Player 2 Point Total: <span id="player2-total"></span><h3>
+            <ul id="player2-history">
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
